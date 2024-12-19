@@ -5,8 +5,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// import the user model
+// import the models
 import { User } from './models/user.schema.js';
+import { Post } from './models/post.schema.js';
 
 const app = express();
 const PORT = 8080;
@@ -160,6 +161,45 @@ app.get('/api/unprotected', (req, res) => {
 app.get('/api/protected', authenticateUser, (req, res) => {
     res.send('This is a protected route');
 })
+
+// GET - /api/posts - get all posts
+
+// GET - /api/posts/:id - get a post by id
+
+// POST - /api/posts - create a post - PRIVATE ROUTE
+app.post("/api/posts", authenticateUser, async (req, res) => {
+    // destructure the request body
+    const { name, content } = req.body;
+
+    // validate the request body
+    if (!name || !content) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide all the fields"
+        })
+    }
+
+    try {
+        // create a new post
+        const post = new Post({
+            name,
+            content,
+            createdBy: req.user._id
+        })
+
+        // save the post
+        await post.save();
+
+        // send the success response
+        res.status(201).json(post)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// PUT - /api/posts/:id - update a post
+
+// DELETE - /api/posts/:id - delete a post
 
 // start the server
 app.listen(PORT, () => {
