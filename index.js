@@ -1,12 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const timedOutMiddleware = require('./middlewares/timedOut');
-
-const User = require('./models/user.schema');
+// import the user model
+import { User } from './models/user.schema.js';
 
 const app = express();
 const PORT = 8080;

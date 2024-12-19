@@ -2,8 +2,8 @@
 
 ## Authn/Authz
 
-- Users can create a new account
-- Users can login to their account
+- [x] Users can create a new account
+- [x] Users can login to their account
 
 ## Posts
 
