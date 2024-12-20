@@ -3,6 +3,6 @@ import { createMessage } from '../controllers/email.controllers.js';
 
 const router = express.Router();
 
-router.post('/send', createMessage);
+router.post('/', createMessage);
 
 export default router;

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 // import the models
@@ -19,6 +20,9 @@ const SALT_ROUNDS = 10;
 
 // parse json middleware
 app.use(express.json());
+
+// cors middleware
+app.use(cors());
 
 // timed out middleware
 // app.use(timedOutMiddleware())
