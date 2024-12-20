@@ -9,6 +9,10 @@ dotenv.config();
 import { User } from './models/user.schema.js';
 import { Post } from './models/post.schema.js';
 
+// import the email routes 
+import EmailRoute from './routes/email.routes.js';
+
+
 const app = express();
 const PORT = 8080;
 const SALT_ROUNDS = 10;
@@ -310,7 +314,7 @@ app.get("/api/posts/user/:id", async (req, res) => {
     }
 })
 
-
+app.use('/api/email', EmailRoute);
 
 // start the server
 app.listen(PORT, () => {
