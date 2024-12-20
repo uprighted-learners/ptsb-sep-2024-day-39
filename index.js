@@ -162,9 +162,42 @@ app.get('/api/protected', authenticateUser, (req, res) => {
     res.send('This is a protected route');
 })
 
-// GET - /api/posts - get all posts
+// GET - /api/posts - get all posts - PUBLIC ROUTE
+app.get("/api/posts", async (req, res) => {
+    try {
+        // get all the posts
+        const posts = await Post.find({});
 
-// GET - /api/posts/:id - get a post by id
+        // send the success response
+        res.status(200).json(posts)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// GET - /api/posts/:id - get a post by _id
+app.get("/api/posts/:id", async (req, res) => {
+    try {
+        // get the id from the request params
+        const { id } = req.params;
+
+        // get the post by _id
+        const post = await Post.findById(id)
+
+        // validation
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        // send the success response
+        res.status(200).json(post)
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 // POST - /api/posts - create a post - PRIVATE ROUTE
 app.post("/api/posts", authenticateUser, async (req, res) => {
@@ -199,7 +232,35 @@ app.post("/api/posts", authenticateUser, async (req, res) => {
 
 // PUT - /api/posts/:id - update a post
 
-// DELETE - /api/posts/:id - delete a post
+// DELETE - /api/posts/:id - delete a post - PRIVATE ROUTE
+app.delete("/api/posts/:id", async (req, res) => {
+    try {
+        // get the id from the request params
+        const { id } = req.params;
+
+        // find the post by id
+        const post = await Post.findById(id);
+
+        // validation
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        // delete the post
+        await Post.findByIdAndDelete(id);
+
+        // send the success response
+        res.status(200).json({
+            success: true,
+            message: "Post deleted successfully"
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 // start the server
 app.listen(PORT, () => {
