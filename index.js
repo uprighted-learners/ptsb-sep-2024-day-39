@@ -230,10 +230,44 @@ app.post("/api/posts", authenticateUser, async (req, res) => {
     }
 })
 
-// PUT - /api/posts/:id - update a post
+// PUT - /api/posts/:id - update a post - PRIVATE ROUTE
+app.put("/api/posts/:id", authenticateUser, async (req, res) => {
+    try {
+        // get the id from the request params
+        const { id } = req.params;
+
+        // destructure the request body
+        const { name, content } = req.body;
+
+        // find the post by id
+        const post = await Post.findById(id);
+
+        // validation
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        // update the post
+        post.name = name;
+        post.content = content;
+        post.updatedAt = Date.now();
+
+        // save the post
+        await post.save();
+
+        // send the success response
+        res.status(200).json(post)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 // DELETE - /api/posts/:id - delete a post - PRIVATE ROUTE
-app.delete("/api/posts/:id", async (req, res) => {
+app.delete("/api/posts/:id", authenticateUser, async (req, res) => {
     try {
         // get the id from the request params
         const { id } = req.params;
@@ -261,6 +295,22 @@ app.delete("/api/posts/:id", async (req, res) => {
         console.log(error);
     }
 })
+
+// GET - /api/posts/user/:id - get all posts by a specific user - PUBLIC ROUTE
+app.get("/api/posts/user/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        // get all the posts by a specific user
+        const posts = await Post.find({ createdBy: id });
+
+        // send the success response
+        res.status(200).json(posts)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 // start the server
 app.listen(PORT, () => {
